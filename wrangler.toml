@@ -6,7 +6,7 @@ compatibility_date = "2024-01-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "theopublic-tasks"
-database_id = "YOUR_DATABASE_ID_HERE"
+database_id = "029d1f1c-625d-4077-ae22-1e6d58bc29d1"
 
 # Environment variables (optional)
 [vars]
