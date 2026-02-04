@@ -105,15 +105,23 @@
         .dashboard {
             padding: 2rem;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 2rem;
             max-width: 1600px;
             margin: 0 auto;
         }
         
+        .dashboard > .widget:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+        }
+        
         @media (max-width: 1200px) {
             .dashboard {
                 grid-template-columns: 1fr;
+            }
+            
+            .dashboard > .widget:last-child:nth-child(odd) {
+                grid-column: auto;
             }
         }
         
@@ -483,6 +491,9 @@
         
         <!-- Project Tracker Widget -->
         <div class="widget" id="tracker-container"></div>
+        
+        <!-- Weather Widget -->
+        <div class="widget" id="weather-container"></div>
     </main>
 
     <footer class="footer">
@@ -491,11 +502,13 @@
 
     <script src="widgets/financial-ticker.js"></script>
     <script src="widgets/project-tracker.js"></script>
+    <script src="widgets/weather.js"></script>
     <script>
         // Initialize widgets
         document.addEventListener('DOMContentLoaded', () => {
             new FinancialTicker(document.getElementById('ticker-container'));
             new ProjectTracker(document.getElementById('tracker-container'));
+            new WeatherWidget(document.getElementById('weather-container'), 'Maple Grove, MN');
         });
     </script>
 </body>
