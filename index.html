@@ -494,6 +494,9 @@
         
         <!-- Weather Widget -->
         <div class="widget" id="weather-container"></div>
+        
+        <!-- Calendar Widget -->
+        <div class="widget" id="calendar-container"></div>
     </main>
 
     <footer class="footer">
@@ -503,12 +506,14 @@
     <script src="widgets/financial-ticker.js"></script>
     <script src="widgets/project-tracker.js"></script>
     <script src="widgets/weather.js"></script>
+    <script src="widgets/calendar.js"></script>
     <script>
         // Initialize widgets
         document.addEventListener('DOMContentLoaded', () => {
             new FinancialTicker(document.getElementById('ticker-container'));
             new ProjectTracker(document.getElementById('tracker-container'));
             new WeatherWidget(document.getElementById('weather-container'), 'Maple Grove, MN');
+            new CalendarWidget(document.getElementById('calendar-container'));
         });
     </script>
 </body>
