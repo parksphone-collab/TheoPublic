@@ -1,13 +1,15 @@
+const YAHOO_API = 'https://query1.finance.yahoo.com/v8/finance/chart';
+
 class FinancialTicker {
   constructor(container) {
     this.container = container;
     this.assets = [
       { symbol: 'BTC', name: 'Bitcoin', type: 'crypto', price: null, change24h: null },
       { symbol: 'DOGE', name: 'Dogecoin', type: 'crypto', price: null, change24h: null },
-      { symbol: 'SPX', name: 'S&P 500', type: 'stock', price: null, change24h: null },
-      { symbol: 'DJI', name: 'Dow Jones', type: 'stock', price: null, change24h: null },
-      { symbol: 'GOLD', name: 'Gold', type: 'commodity', price: null, change24h: null },
-      { symbol: 'SILVER', name: 'Silver', type: 'commodity', price: null, change24h: null }
+      { symbol: 'SPX', name: 'S&P 500', type: 'stock', price: null, change24h: null, yahooSymbol: '^GSPC' },
+      { symbol: 'DJI', name: 'Dow Jones', type: 'stock', price: null, change24h: null, yahooSymbol: '^DJI' },
+      { symbol: 'GOLD', name: 'Gold', type: 'commodity', price: null, change24h: null, yahooSymbol: 'GC=F' },
+      { symbol: 'SILVER', name: 'Silver', type: 'commodity', price: null, change24h: null, yahooSymbol: 'SI=F' }
     ];
     this.lastUpdate = null;
     this.init();
@@ -31,6 +33,12 @@ class FinancialTicker {
       this.assets.find(a => a.symbol === 'DOGE').price = cryptoData.dogecoin.usd;
       this.assets.find(a => a.symbol === 'DOGE').change24h = cryptoData.dogecoin.usd_24h_change;
 
+      // Stocks & Commodities from Yahoo Finance
+      await this.fetchYahooData('SPX', '^GSPC');
+      await this.fetchYahooData('DJI', '^DJI');
+      await this.fetchYahooData('GOLD', 'GC=F');
+      await this.fetchYahooData('SILVER', 'SI=F');
+
       this.lastUpdate = new Date();
       this.render();
     } catch (e) {
@@ -44,6 +52,31 @@ class FinancialTicker {
       this.assets[5].price = 32.50; this.assets[5].change24h = 1.1;
       this.lastUpdate = new Date();
       this.render();
+    }
+  }
+
+  async fetchYahooData(symbol, yahooSymbol) {
+    try {
+      const response = await fetch(`${YAHOO_API}/${yahooSymbol}?interval=1d&range=2d`);
+      const data = await response.json();
+      
+      if (data.chart && data.chart.result && data.chart.result[0]) {
+        const result = data.chart.result[0];
+        const meta = result.meta;
+        const prices = result.indicators.quote[0].close;
+        
+        const currentPrice = meta.regularMarketPrice || prices[prices.length - 1];
+        const previousPrice = meta.previousClose || prices[0];
+        const change24h = ((currentPrice - previousPrice) / previousPrice) * 100;
+        
+        const asset = this.assets.find(a => a.symbol === symbol);
+        if (asset) {
+          asset.price = currentPrice;
+          asset.change24h = change24h;
+        }
+      }
+    } catch (e) {
+      console.error(`Failed to fetch ${symbol}:`, e);
     }
   }
 

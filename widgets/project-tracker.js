@@ -31,8 +31,7 @@ class ProjectTracker {
           { id: 6, title: 'AI Consulting', progress: 10, revenue: 0, description: 'Personal AI assistant services' }
         ],
         fun_projects: [
-          { id: 7, title: '3D Print Tracker', emoji: '🖨️', milestones: [{ done: true, text: 'Design mockups' }, { done: false, text: 'Bambu API integration' }], notes: 'Track P2S prints and filament' },
-          { id: 8, title: 'Plex Dashboard', emoji: '🎬', milestones: [{ done: false, text: 'Tautulli API' }], notes: 'Media server stats and alerts' }
+          { id: 7, title: '3D Print Tracker', emoji: '🖨️', milestones: [{ done: true, text: 'Design mockups' }, { done: false, text: 'Bambu API integration' }], notes: 'Track P2S prints and filament' }
         ]
       };
     }
