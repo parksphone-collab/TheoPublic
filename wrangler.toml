@@ -1,0 +1,16 @@
+name = "theopublic-api"
+main = "api/worker.js"
+compatibility_date = "2024-01-01"
+
+# D1 Database - Replace with your database ID after creation
+[[d1_databases]]
+binding = "DB"
+database_name = "theopublic-tasks"
+database_id = "YOUR_DATABASE_ID_HERE"
+
+# Environment variables (optional)
+[vars]
+# Add any public env vars here
+
+# Secrets (use `wrangler secret put`)
+# API_KEY = ""
