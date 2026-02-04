@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Theo | AI Co-Pilot Dashboard</title>
+    <title>THEO // Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,144 +12,491 @@
             box-sizing: border-box;
         }
         
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0f;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a2e;
+            --bg-hover: #252540;
+            --accent-green: #00ff88;
+            --accent-red: #ff4444;
+            --accent-yellow: #ffaa00;
+            --accent-blue: #4488ff;
+            --text-primary: #e0e0e0;
+            --text-secondary: #888;
+            --border: #2a2a4e;
         }
         
-        .container {
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
+        body {
+            font-family: 'Source Code Pro', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
         .logo {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .subtitle {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 2rem;
-        }
-        
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 1rem 0;
-            backdrop-filter: blur(10px);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
-        }
-        
-        .status {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
-            background: rgba(0, 255, 136, 0.1);
-            color: #00ff88;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 1rem;
+            gap: 1rem;
         }
         
-        .status::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: #00ff88;
-            border-radius: 50%;
+        .logo-icon {
+            font-size: 2rem;
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.6; }
         }
         
-        .links {
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-green) 0%, var(--accent-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .logo-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+        }
+        
+        .status-bar {
             display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.8rem;
         }
         
-        .link {
-            color: #667eea;
-            text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            border: 1px solid rgba(102, 126, 234, 0.3);
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+        
+        /* Main Grid */
+        .dashboard {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Widget Base */
+        .widget {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .widget-header {
+            background: var(--bg-secondary);
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        /* Ticker Widget Styles */
+        .ticker-widget {
+            padding: 1.5rem;
+        }
+        
+        .ticker-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .ticker-title {
+            font-weight: 700;
+            color: var(--accent-blue);
+            letter-spacing: 1px;
+        }
+        
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .ticker-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        
+        @media (max-width: 600px) {
+            .ticker-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .asset-card {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
             transition: all 0.2s;
         }
         
-        .link:hover {
-            background: rgba(102, 126, 234, 0.1);
-            border-color: #667eea;
+        .asset-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-2px);
         }
         
-        footer {
-            margin-top: 3rem;
-            color: #555;
+        .asset-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .asset-symbol {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .asset-name {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+        }
+        
+        .asset-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            font-family: 'Source Code Pro', monospace;
+        }
+        
+        .asset-change {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .ticker-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        
+        /* Tracker Widget Styles */
+        .tracker-widget {
+            padding: 1.5rem;
+        }
+        
+        .tracker-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tracker-title {
+            font-weight: 700;
+            color: var(--accent-yellow);
+            letter-spacing: 2px;
+        }
+        
+        .tracker-blink {
+            animation: blink 1s infinite;
+            color: var(--accent-green);
+        }
+        
+        .tracker-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section-icon {
+            font-size: 1rem;
+        }
+        
+        .count-badge {
+            background: var(--accent-blue);
+            color: var(--bg-primary);
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
+        
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .task-item {
+            background: var(--bg-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .task-item:hover {
+            border-color: var(--border);
+        }
+        
+        .task-item.checked {
+            opacity: 0.6;
+        }
+        
+        .task-item.checked .task-title {
+            text-decoration: line-through;
+        }
+        
+        .task-title {
+            flex: 1;
             font-size: 0.9rem;
+        }
+        
+        .priority-pill {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 3px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .task-status {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        @media (max-width: 600px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .project-card {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--accent-green);
+        }
+        
+        .card-emoji {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-card);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-green), var(--accent-blue));
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            min-width: 35px;
+        }
+        
+        .revenue-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .revenue-label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .revenue-value {
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+        
+        .card-details {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        .milestones {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+        
+        .milestone {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        
+        .milestone.done {
+            color: var(--text-primary);
+        }
+        
+        .milestone .check {
+            color: var(--accent-green);
+            font-weight: 700;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">🚀</div>
-        <h1>Theo</h1>
-        <p class="subtitle">AI Co-Pilot for Crushing Life</p>
-        
-        <div class="card">
-            <h2>Status Dashboard</h2>
-            <p>Real-time overview of systems, projects, and ongoing tasks.</p>
-            <div class="status">
-                <span>Systems Operational</span>
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">🚀</span>
+            <div>
+                <div class="logo-text">THEO</div>
+                <div class="logo-subtitle">AI CO-PILOT // COMMAND CENTER</div>
             </div>
         </div>
-        
-        <div class="links">
-            <a href="#" class="link">Projects</a>
-            <a href="#" class="link">Tools</a>
-            <a href="#" class="link">Docs</a>
+        <div class="status-bar">
+            <div class="status-item">
+                <span class="status-dot"></span>
+                <span>SYSTEMS OPERATIONAL</span>
+            </div>
+            <div class="status-item">
+                <span>◉ v1.0.0</span>
+            </div>
         </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Financial Ticker Widget -->
+        <div class="widget" id="ticker-container"></div>
         
-        <footer>
-            <p>Built with 💜 by Theo & Parker</p>
-            <p>Part of the TheoPROD ecosystem</p>
-        </footer>
-    </div>
+        <!-- Project Tracker Widget -->
+        <div class="widget" id="tracker-container"></div>
+    </main>
+
+    <footer class="footer">
+        <p>Built with 💜 by Theo & Parker | Part of the TheoPROD ecosystem</p>
+    </footer>
+
+    <script src="widgets/financial-ticker.js"></script>
+    <script src="widgets/project-tracker.js"></script>
+    <script>
+        // Initialize widgets
+        document.addEventListener('DOMContentLoaded', () => {
+            new FinancialTicker(document.getElementById('ticker-container'));
+            new ProjectTracker(document.getElementById('tracker-container'));
+        });
+    </script>
 </body>
 </html>
