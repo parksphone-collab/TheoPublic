@@ -1,0 +1,1085 @@
+/* ============================================
+   THEO DASHBOARD v2.0 — PIXEL MILITARY TERMINAL
+   ============================================ */
+
+:root {
+    /* Color Palette */
+    --color-base: #0a0a0f;
+    --color-base-light: #151520;
+    --color-military-green: #00ff41;
+    --color-warning: #ffaa00;
+    --color-alert: #ff3333;
+    --color-info: #00ccff;
+    --color-text: #c0c0c0;
+    --color-text-dim: #707070;
+    
+    /* Spacing */
+    --gap: 16px;
+    --border-width: 2px;
+    
+    /* Fonts */
+    --font-display: 'VT323', monospace;
+    --font-body: 'Source Code Pro', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--color-base);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* CRT Scanline Effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 255, 65, 0.03) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 255, 65, 0.03) 3px
+    );
+    animation: scanline 8s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(10px); }
+}
+
+/* ============================================
+   HEADER BAR
+   ============================================ */
+
+.header-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: var(--color-base-light);
+    border-bottom: var(--border-width) solid var(--color-military-green);
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 1px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+.header-section {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-military-green);
+}
+
+.header-label {
+    color: var(--color-text-dim);
+    margin-right: -10px;
+}
+
+#live-clock {
+    color: var(--color-military-green);
+    font-weight: bold;
+}
+
+/* LED Indicators */
+.led-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px currentColor;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.led-online {
+    background: var(--color-military-green);
+    color: var(--color-military-green);
+}
+
+.led-warning {
+    background: var(--color-warning);
+    color: var(--color-warning);
+}
+
+.led-alert {
+    background: var(--color-alert);
+    color: var(--color-alert);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ============================================
+   DASHBOARD GRID
+   ============================================ */
+
+main.dashboard-grid {
+    margin-top: 80px;
+    padding: var(--gap);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--gap);
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+.card {
+    background: var(--color-base-light);
+    border: var(--border-width) solid var(--color-military-green);
+    box-shadow: 
+        0 0 10px rgba(0, 255, 65, 0.2),
+        inset 0 0 20px rgba(0, 255, 65, 0.05);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.card:hover {
+    box-shadow: 
+        0 0 20px rgba(0, 255, 65, 0.4),
+        inset 0 0 30px rgba(0, 255, 65, 0.1);
+    transform: translateY(-2px);
+}
+
+.card-wide {
+    grid-column: span 2;
+}
+
+.card-tall {
+    grid-row: span 2;
+}
+
+.card-priority {
+    border-color: var(--color-alert);
+    box-shadow: 
+        0 0 15px rgba(255, 51, 51, 0.3),
+        inset 0 0 20px rgba(255, 51, 51, 0.05);
+}
+
+.card-priority:hover {
+    box-shadow: 
+        0 0 25px rgba(255, 51, 51, 0.5),
+        inset 0 0 30px rgba(255, 51, 51, 0.1);
+}
+
+/* Card Header */
+.card-header {
+    background: rgba(0, 255, 65, 0.1);
+    border-bottom: 1px solid var(--color-military-green);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 2px;
+}
+
+.card-title {
+    color: var(--color-military-green);
+    text-shadow: 0 0 8px var(--color-military-green);
+}
+
+/* Card Body */
+.card-body {
+    padding: 16px;
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-body.scrollable {
+    overflow-y: auto;
+    max-height: 400px;
+}
+
+.card-body.scrollable::-webkit-scrollbar {
+    width: 8px;
+}
+
+.card-body.scrollable::-webkit-scrollbar-track {
+    background: var(--color-base);
+}
+
+.card-body.scrollable::-webkit-scrollbar-thumb {
+    background: var(--color-military-green);
+    border: 1px solid var(--color-base);
+}
+
+/* Card Footer */
+.card-footer {
+    border-top: 1px solid var(--color-military-green);
+    padding: 12px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+
+.badge {
+    padding: 2px 8px;
+    border: 1px solid;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.badge-info {
+    color: var(--color-info);
+    border-color: var(--color-info);
+    background: rgba(0, 204, 255, 0.1);
+}
+
+.badge-warning {
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+    background: rgba(255, 170, 0, 0.1);
+}
+
+.badge-alert {
+    color: var(--color-alert);
+    border-color: var(--color-alert);
+    background: rgba(255, 51, 51, 0.1);
+}
+
+.badge-success {
+    color: var(--color-military-green);
+    border-color: var(--color-military-green);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+button {
+    font-family: var(--font-display);
+    font-size: 16px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: var(--border-width) solid;
+    background: transparent;
+    padding: 8px 16px;
+    color: inherit;
+}
+
+button:hover {
+    box-shadow: 0 0 15px currentColor;
+}
+
+button:active {
+    transform: translateY(2px);
+    box-shadow: 0 0 5px currentColor;
+}
+
+.btn-primary {
+    color: var(--color-military-green);
+    border-color: var(--color-military-green);
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.btn-primary:hover {
+    background: rgba(0, 255, 65, 0.2);
+}
+
+.btn-secondary {
+    color: var(--color-info);
+    border-color: var(--color-info);
+    background: rgba(0, 204, 255, 0.1);
+}
+
+.btn-secondary:hover {
+    background: rgba(0, 204, 255, 0.2);
+}
+
+.btn-filter {
+    padding: 4px 12px;
+    font-size: 14px;
+    color: var(--color-text-dim);
+    border-color: var(--color-text-dim);
+}
+
+.btn-filter.active {
+    color: var(--color-military-green);
+    border-color: var(--color-military-green);
+    background: rgba(0, 255, 65, 0.2);
+}
+
+.btn-command {
+    padding: 4px 10px;
+    font-size: 13px;
+    color: var(--color-warning);
+    border-color: var(--color-warning);
+}
+
+.btn-dismiss {
+    padding: 2px 8px;
+    font-size: 18px;
+    color: var(--color-text-dim);
+    border: 1px solid var(--color-text-dim);
+}
+
+.btn-install {
+    padding: 4px 12px;
+    font-size: 12px;
+}
+
+.btn-toggle {
+    padding: 6px 12px;
+    font-size: 14px;
+    color: var(--color-text-dim);
+    border-color: var(--color-text-dim);
+}
+
+.btn-toggle.active {
+    color: var(--color-military-green);
+    border-color: var(--color-military-green);
+    background: rgba(0, 255, 65, 0.2);
+}
+
+/* ============================================
+   INPUTS
+   ============================================ */
+
+.input-field,
+.select-field {
+    width: 100%;
+    padding: 8px 12px;
+    background: var(--color-base);
+    border: 1px solid var(--color-military-green);
+    color: var(--color-military-green);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+}
+
+.input-field:focus,
+.select-field:focus {
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.input-field::placeholder {
+    color: var(--color-text-dim);
+}
+
+/* ============================================
+   ACTIVITY FEED
+   ============================================ */
+
+.filter-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-left: 2px solid var(--color-military-green);
+    background: rgba(0, 255, 65, 0.05);
+}
+
+.activity-item.activity-warning {
+    border-left-color: var(--color-warning);
+    background: rgba(255, 170, 0, 0.05);
+}
+
+.activity-icon {
+    font-size: 20px;
+}
+
+.activity-text {
+    flex: 1;
+}
+
+.activity-time {
+    color: var(--color-text-dim);
+    font-size: 12px;
+}
+
+/* ============================================
+   CALENDAR
+   ============================================ */
+
+.sync-status {
+    font-size: 12px;
+    color: var(--color-text-dim);
+}
+
+.calendar-event {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(0, 255, 65, 0.05);
+    border-left: 2px solid var(--color-info);
+}
+
+.event-time {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--color-military-green);
+    min-width: 80px;
+}
+
+.event-title {
+    flex: 1;
+}
+
+.event-badge {
+    font-size: 11px;
+}
+
+/* ============================================
+   TO-DO LIST
+   ============================================ */
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+}
+
+.todo-item.todo-completed {
+    opacity: 0.5;
+}
+
+.todo-item.todo-completed .todo-text {
+    text-decoration: line-through;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--color-military-green);
+    background: var(--color-base);
+    cursor: pointer;
+    appearance: none;
+}
+
+.checkbox:checked {
+    background: var(--color-military-green);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.todo-text {
+    flex: 1;
+}
+
+/* ============================================
+   GOALS TRACKER
+   ============================================ */
+
+.goal-item {
+    padding: 12px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.goal-name {
+    font-weight: 600;
+}
+
+.goal-percent {
+    color: var(--color-military-green);
+    font-family: var(--font-display);
+    font-size: 18px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: var(--color-base);
+    border: 1px solid var(--color-military-green);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--color-military-green);
+    box-shadow: 0 0 10px var(--color-military-green);
+    transition: width 0.5s ease;
+}
+
+.progress-fill.progress-warning {
+    background: var(--color-warning);
+    box-shadow: 0 0 10px var(--color-warning);
+}
+
+.goal-footer {
+    margin-top: 6px;
+}
+
+.goal-days {
+    font-size: 12px;
+    color: var(--color-text-dim);
+}
+
+/* ============================================
+   WEATHER
+   ============================================ */
+
+.weather-current {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.weather-temp {
+    font-family: var(--font-display);
+    font-size: 48px;
+    color: var(--color-military-green);
+    text-shadow: 0 0 15px var(--color-military-green);
+}
+
+.weather-icon {
+    font-size: 64px;
+    margin: 10px 0;
+}
+
+.weather-condition {
+    font-size: 18px;
+    color: var(--color-text);
+}
+
+.weather-location {
+    text-align: center;
+    color: var(--color-text-dim);
+    margin: 10px 0;
+}
+
+.weather-forecast {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    border-top: 1px solid rgba(0, 255, 65, 0.2);
+    padding-top: 16px;
+}
+
+.forecast-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.forecast-label {
+    font-size: 12px;
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+}
+
+.forecast-icon {
+    font-size: 32px;
+}
+
+.forecast-temp {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--color-military-green);
+}
+
+/* ============================================
+   RESOURCE MONITOR
+   ============================================ */
+
+.resource-item {
+    margin-bottom: 16px;
+}
+
+.resource-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.resource-value {
+    color: var(--color-military-green);
+    font-family: var(--font-display);
+    font-size: 18px;
+}
+
+.resource-stat {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: rgba(0, 255, 65, 0.05);
+    border-left: 2px solid var(--color-military-green);
+    margin-top: 8px;
+}
+
+.stat-label {
+    color: var(--color-text-dim);
+    font-size: 12px;
+}
+
+.stat-value {
+    color: var(--color-military-green);
+    font-family: var(--font-display);
+    font-size: 16px;
+}
+
+/* ============================================
+   NOTIFICATIONS
+   ============================================ */
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-left: 2px solid;
+    background: rgba(255, 255, 255, 0.02);
+    margin-bottom: 8px;
+}
+
+.notification-item.notification-alert {
+    border-left-color: var(--color-alert);
+    background: rgba(255, 51, 51, 0.05);
+}
+
+.notification-item.notification-warning {
+    border-left-color: var(--color-warning);
+    background: rgba(255, 170, 0, 0.05);
+}
+
+.notification-item.notification-info {
+    border-left-color: var(--color-info);
+    background: rgba(0, 204, 255, 0.05);
+}
+
+.notification-icon {
+    font-size: 20px;
+}
+
+.notification-content {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.notification-text {
+    font-size: 13px;
+    color: var(--color-text-dim);
+}
+
+/* ============================================
+   TOKEN METRICS
+   ============================================ */
+
+.metric-large {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+    margin-bottom: 12px;
+}
+
+.metric-large .metric-label {
+    display: block;
+    color: var(--color-text-dim);
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.metric-large .metric-value {
+    font-family: var(--font-display);
+    font-size: 42px;
+    color: var(--color-military-green);
+    text-shadow: 0 0 15px var(--color-military-green);
+}
+
+.metric-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+}
+
+.metric-row .metric-label {
+    color: var(--color-text-dim);
+}
+
+.metric-row .metric-value {
+    color: var(--color-military-green);
+    font-family: var(--font-display);
+    font-size: 16px;
+}
+
+.provider-usage {
+    margin-top: 16px;
+}
+
+.provider-label {
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+#sparkline {
+    width: 100%;
+    margin-top: 12px;
+}
+
+/* ============================================
+   SECURITY
+   ============================================ */
+
+.security-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: rgba(0, 255, 65, 0.05);
+    margin-bottom: 8px;
+}
+
+.security-name {
+    flex: 1;
+    font-weight: 600;
+}
+
+.security-status {
+    color: var(--color-text-dim);
+    font-size: 12px;
+}
+
+.security-access {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.access-title {
+    font-size: 12px;
+    color: var(--color-text-dim);
+    margin-bottom: 8px;
+}
+
+.access-item {
+    padding: 6px;
+    background: rgba(0, 255, 65, 0.03);
+    border-left: 2px solid var(--color-military-green);
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-family: var(--font-body);
+}
+
+/* ============================================
+   CHAT INTERFACE
+   ============================================ */
+
+.typing-indicator {
+    color: var(--color-warning);
+    font-size: 14px;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.chat-message {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-left: 2px solid;
+    position: relative;
+}
+
+.chat-message.chat-user {
+    background: rgba(0, 204, 255, 0.05);
+    border-left-color: var(--color-info);
+}
+
+.chat-message.chat-theo {
+    background: rgba(0, 255, 65, 0.05);
+    border-left-color: var(--color-military-green);
+}
+
+.chat-content {
+    margin-bottom: 6px;
+}
+
+.chat-time {
+    font-size: 11px;
+    color: var(--color-text-dim);
+}
+
+.quick-commands {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+/* ============================================
+   WIDGETS MARKETPLACE
+   ============================================ */
+
+.widget-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    margin-bottom: 8px;
+}
+
+.widget-icon {
+    font-size: 24px;
+}
+
+.widget-name {
+    flex: 1;
+}
+
+/* ============================================
+   BACKUP/RESTORE
+   ============================================ */
+
+.backup-status {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    margin-bottom: 12px;
+}
+
+.backup-label {
+    font-size: 12px;
+    color: var(--color-text-dim);
+}
+
+.backup-time {
+    color: var(--color-military-green);
+    font-family: var(--font-display);
+    font-size: 16px;
+}
+
+.backup-history {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.backup-version {
+    padding: 6px;
+    background: rgba(0, 255, 65, 0.03);
+    border-left: 2px solid var(--color-military-green);
+    margin-bottom: 6px;
+    font-size: 12px;
+}
+
+/* ============================================
+   SETTINGS
+   ============================================ */
+
+.setting-item {
+    margin-bottom: 16px;
+}
+
+.setting-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+}
+
+.setting-toggle {
+    display: flex;
+    gap: 8px;
+}
+
+/* ============================================
+   PERFORMANCE / ANALYTICS
+   ============================================ */
+
+#performance-chart {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-around;
+    gap: 16px;
+}
+
+.stat-box {
+    text-align: center;
+    padding: 12px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    flex: 1;
+}
+
+.stat-box .stat-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--color-military-green);
+    margin-bottom: 6px;
+}
+
+.stat-box .stat-label {
+    font-size: 11px;
+    color: var(--color-text-dim);
+    text-transform: uppercase;
+}
+
+/* ============================================
+   BUGS/ISSUES
+   ============================================ */
+
+.issue-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.issue-count {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-left: 2px solid;
+}
+
+.issue-count.issue-high {
+    border-left-color: var(--color-alert);
+    background: rgba(255, 51, 51, 0.05);
+}
+
+.issue-count.issue-medium {
+    border-left-color: var(--color-warning);
+    background: rgba(255, 170, 0, 0.05);
+}
+
+.issue-count.issue-low {
+    border-left-color: var(--color-info);
+    background: rgba(0, 204, 255, 0.05);
+}
+
+.issue-icon {
+    font-size: 24px;
+}
+
+.issue-number {
+    font-family: var(--font-display);
+    font-size: 32px;
+    color: var(--color-military-green);
+}
+
+.issue-label {
+    flex: 1;
+    font-size: 14px;
+}
+
+/* ============================================
+   ROADMAP
+   ============================================ */
+
+.roadmap-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid rgba(0, 255, 65, 0.2);
+    margin-bottom: 12px;
+}
+
+.roadmap-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.roadmap-title {
+    font-weight: 600;
+}
+
+.roadmap-votes {
+    font-size: 16px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 1200px) {
+    .card-wide {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-bar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .header-section {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    main.dashboard-grid {
+        margin-top: 120px;
+        grid-template-columns: 1fr;
+    }
+    
+    .card-wide,
+    .card-tall {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
+}

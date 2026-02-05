@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THEO DASHBOARD v2.0 — MISSION CONTROL</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Source+Code+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Fixed Header Bar -->
+    <header class="header-bar">
+        <div class="header-section">
+            <span class="header-item">
+                <span class="icon">⏰</span>
+                <span id="live-clock">--:--:-- UTC</span>
+            </span>
+            <span class="header-item">
+                <span class="led-indicator led-online"></span>
+                <span>ONLINE</span>
+            </span>
+        </div>
+        
+        <div class="header-section">
+            <span class="header-label">MODELS:</span>
+            <span class="header-item">Kimi <span class="led-indicator led-online"></span></span>
+            <span class="header-item">Grok <span class="led-indicator led-online"></span></span>
+            <span class="header-item">GPT <span class="led-indicator led-warning"></span></span>
+        </div>
+        
+        <div class="header-section">
+            <span class="header-item">Gmail <span class="led-indicator led-online"></span></span>
+            <span class="header-item">Discord <span class="led-indicator led-online"></span></span>
+            <span class="header-item">Calendar <span class="led-indicator led-online"></span></span>
+            <span class="header-item">SSH <span class="led-indicator led-online"></span></span>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Grid -->
+    <main class="dashboard-grid">
+        
+        <!-- 1. Activity Feed (Wide) -->
+        <div class="card card-wide" id="activity-feed">
+            <div class="card-header">
+                <span class="card-title">ACTIVITY FEED</span>
+                <div class="filter-buttons">
+                    <button class="btn-filter active">All</button>
+                    <button class="btn-filter">System</button>
+                    <button class="btn-filter">Cron</button>
+                    <button class="btn-filter">Errors</button>
+                </div>
+            </div>
+            <div class="card-body scrollable">
+                <div class="activity-item">
+                    <span class="activity-icon">✉️</span>
+                    <span class="activity-text">Processed email at 10:05 PM</span>
+                    <span class="activity-time">2m ago</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon">⏰</span>
+                    <span class="activity-text">Ran cron: Daily backup</span>
+                    <span class="activity-time">15m ago</span>
+                </div>
+                <div class="activity-item activity-warning">
+                    <span class="activity-icon">⚠️</span>
+                    <span class="activity-text">Gmail token expires in 2 days</span>
+                    <span class="activity-time">1h ago</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon">🔧</span>
+                    <span class="activity-text">System update completed</span>
+                    <span class="activity-time">3h ago</span>
+                </div>
+                <div class="activity-item">
+                    <span class="activity-icon">📊</span>
+                    <span class="activity-text">Generated analytics report</span>
+                    <span class="activity-time">5h ago</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="text" class="input-field" placeholder="Search activity..." />
+            </div>
+        </div>
+
+        <!-- 2. Calendar (Wide) -->
+        <div class="card card-wide" id="calendar">
+            <div class="card-header">
+                <span class="card-title">CALENDAR</span>
+                <span class="sync-status">Synced: 2 min ago</span>
+            </div>
+            <div class="card-body">
+                <div class="calendar-event">
+                    <span class="event-time">10:00 AM</span>
+                    <span class="event-title">Team Standup</span>
+                    <span class="event-badge badge-info">Today</span>
+                </div>
+                <div class="calendar-event">
+                    <span class="event-time">2:00 PM</span>
+                    <span class="event-title">Project Review</span>
+                    <span class="event-badge badge-info">Today</span>
+                </div>
+                <div class="calendar-event">
+                    <span class="event-time">4:30 PM</span>
+                    <span class="event-title">Dentist Appointment</span>
+                    <span class="event-badge badge-warning">Tomorrow</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn-primary">+ Add Event</button>
+            </div>
+        </div>
+
+        <!-- 3. To-Do List (Square) -->
+        <div class="card" id="todo-list">
+            <div class="card-header">
+                <span class="card-title">TO-DO LIST</span>
+                <span class="badge badge-info">3</span>
+            </div>
+            <div class="card-body">
+                <div class="todo-item">
+                    <input type="checkbox" class="checkbox" />
+                    <span class="todo-text">Review PR</span>
+                    <span class="badge badge-alert">HIGH</span>
+                </div>
+                <div class="todo-item todo-completed">
+                    <input type="checkbox" class="checkbox" checked />
+                    <span class="todo-text">Update dashboard</span>
+                    <span class="badge badge-warning">MED</span>
+                </div>
+                <div class="todo-item">
+                    <input type="checkbox" class="checkbox" />
+                    <span class="todo-text">Deploy to production</span>
+                    <span class="badge badge-alert">HIGH</span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="text" class="input-field" placeholder="+ Add task..." />
+            </div>
+        </div>
+
+        <!-- 4. Goals Tracker (Square) -->
+        <div class="card" id="goals">
+            <div class="card-header">
+                <span class="card-title">GOALS</span>
+            </div>
+            <div class="card-body">
+                <div class="goal-item">
+                    <div class="goal-header">
+                        <span class="goal-name">First AI Income</span>
+                        <span class="goal-percent">35%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 35%"></div>
+                    </div>
+                    <div class="goal-footer">
+                        <span class="goal-days">18 days remaining</span>
+                    </div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-header">
+                        <span class="goal-name">Deploy Dashboard</span>
+                        <span class="goal-percent">80%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                    <div class="goal-footer">
+                        <span class="goal-days">3 days remaining</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Weather (Square) -->
+        <div class="card" id="weather">
+            <div class="card-header">
+                <span class="card-title">WEATHER</span>
+            </div>
+            <div class="card-body">
+                <div class="weather-current">
+                    <div class="weather-temp">72°F</div>
+                    <div class="weather-icon">☀️</div>
+                    <div class="weather-condition">Sunny</div>
+                </div>
+                <div class="weather-location">Minnetonka, MN</div>
+                <div class="weather-forecast">
+                    <div class="forecast-day">
+                        <span class="forecast-label">Thu</span>
+                        <span class="forecast-icon">⛅</span>
+                        <span class="forecast-temp">70°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="forecast-label">Fri</span>
+                        <span class="forecast-icon">🌧️</span>
+                        <span class="forecast-temp">68°</span>
+                    </div>
+                    <div class="forecast-day">
+                        <span class="forecast-label">Sat</span>
+                        <span class="forecast-icon">☀️</span>
+                        <span class="forecast-temp">72°</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Resource Monitor (Tall) -->
+        <div class="card card-tall" id="resources">
+            <div class="card-header">
+                <span class="card-title">RESOURCES</span>
+                <span class="sync-status">Updated: just now</span>
+            </div>
+            <div class="card-body">
+                <div class="resource-item">
+                    <div class="resource-label">
+                        <span>DISK</span>
+                        <span class="resource-value">65%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-warning" style="width: 65%"></div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-label">
+                        <span>MEMORY</span>
+                        <span class="resource-value">42%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 42%"></div>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-label">
+                        <span>CPU</span>
+                        <span class="resource-value">18%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 18%"></div>
+                    </div>
+                </div>
+                <div class="resource-stat">
+                    <span class="stat-label">UPTIME</span>
+                    <span class="stat-value">47d 3h 12m</span>
+                </div>
+                <div class="resource-stat">
+                    <span class="stat-label">LOAD AVG</span>
+                    <span class="stat-value">0.42 0.38 0.35</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Notifications (Square, Priority) -->
+        <div class="card card-priority" id="notifications">
+            <div class="card-header">
+                <span class="card-title">NOTIFICATIONS</span>
+                <span class="badge badge-alert">3</span>
+            </div>
+            <div class="card-body scrollable">
+                <div class="notification-item notification-alert">
+                    <span class="notification-icon">🔴</span>
+                    <div class="notification-content">
+                        <div class="notification-title">Urgent</div>
+                        <div class="notification-text">Gmail token expires in 2 days</div>
+                    </div>
+                    <button class="btn-dismiss">×</button>
+                </div>
+                <div class="notification-item notification-warning">
+                    <span class="notification-icon">🟡</span>
+                    <div class="notification-content">
+                        <div class="notification-title">Warning</div>
+                        <div class="notification-text">Disk space at 65%</div>
+                    </div>
+                    <button class="btn-dismiss">×</button>
+                </div>
+                <div class="notification-item notification-info">
+                    <span class="notification-icon">🟢</span>
+                    <div class="notification-content">
+                        <div class="notification-title">Info</div>
+                        <div class="notification-text">Backup completed successfully</div>
+                    </div>
+                    <button class="btn-dismiss">×</button>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn-secondary">Mark all read</button>
+            </div>
+        </div>
+
+        <!-- 8. Token Metrics (Square) -->
+        <div class="card" id="token-metrics">
+            <div class="card-header">
+                <span class="card-title">TOKEN USAGE</span>
+            </div>
+            <div class="card-body">
+                <div class="metric-large">
+                    <span class="metric-label">Today's Cost</span>
+                    <span class="metric-value">$0.42</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">API Calls</span>
+                    <span class="metric-value">247 today</span>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">Error Rate</span>
+                    <span class="metric-value">0.4%</span>
+                </div>
+                <div class="provider-usage">
+                    <div class="provider-label">OpenRouter</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <canvas id="sparkline" width="200" height="40"></canvas>
+            </div>
+        </div>
+
+        <!-- 9. Security Overview (Square) -->
+        <div class="card" id="security">
+            <div class="card-header">
+                <span class="card-title">SECURITY</span>
+            </div>
+            <div class="card-body">
+                <div class="security-item">
+                    <span class="security-name">Gmail</span>
+                    <span class="led-indicator led-online"></span>
+                    <span class="security-status">Valid (3d)</span>
+                </div>
+                <div class="security-item">
+                    <span class="security-name">Discord</span>
+                    <span class="led-indicator led-online"></span>
+                    <span class="security-status">Active</span>
+                </div>
+                <div class="security-item">
+                    <span class="security-name">SSH</span>
+                    <span class="led-indicator led-online"></span>
+                    <span class="security-status">Connected</span>
+                </div>
+                <div class="security-access">
+                    <div class="access-title">Last Access</div>
+                    <div class="access-item">192.168.1.100 • 2m ago</div>
+                    <div class="access-item">192.168.1.105 • 1h ago</div>
+                    <div class="access-item">192.168.1.110 • 3h ago</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn-secondary">Rotate Keys</button>
+            </div>
+        </div>
+
+        <!-- 10. Chat Interface (Wide) -->
+        <div class="card card-wide" id="chat">
+            <div class="card-header">
+                <span class="card-title">CHAT WITH THEO</span>
+                <span class="typing-indicator" style="display: none;">● typing...</span>
+            </div>
+            <div class="card-body scrollable">
+                <div class="chat-message chat-user">
+                    <div class="chat-content">Hey Theo, what's my schedule today?</div>
+                    <div class="chat-time">10:05 AM</div>
+                </div>
+                <div class="chat-message chat-theo">
+                    <div class="chat-content">You have 3 events: Team Standup at 10 AM, Project Review at 2 PM, and Dentist at 4:30 PM tomorrow.</div>
+                    <div class="chat-time">10:05 AM</div>
+                </div>
+                <div class="chat-message chat-user">
+                    <div class="chat-content">Thanks! Can you check my emails?</div>
+                    <div class="chat-time">10:06 AM</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="quick-commands">
+                    <button class="btn-command">/status</button>
+                    <button class="btn-command">/weather</button>
+                    <button class="btn-command">/backup</button>
+                </div>
+                <input type="text" class="input-field" placeholder="Type a message..." />
+            </div>
+        </div>
+
+        <!-- 11. Widgets Marketplace (Square) -->
+        <div class="card" id="widgets-marketplace">
+            <div class="card-header">
+                <span class="card-title">WIDGETS</span>
+                <span class="badge badge-info">3 installed</span>
+            </div>
+            <div class="card-body scrollable">
+                <div class="widget-item">
+                    <span class="widget-icon">📰</span>
+                    <span class="widget-name">News Feed</span>
+                    <button class="btn-install">Install</button>
+                </div>
+                <div class="widget-item">
+                    <span class="widget-icon">📈</span>
+                    <span class="widget-name">Stocks</span>
+                    <button class="btn-install">Install</button>
+                </div>
+                <div class="widget-item">
+                    <span class="widget-icon">💪</span>
+                    <span class="widget-name">Fitness Tracker</span>
+                    <button class="btn-install">Install</button>
+                </div>
+                <div class="widget-item">
+                    <span class="widget-icon">🎵</span>
+                    <span class="widget-name">Spotify</span>
+                    <button class="btn-install">Install</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 12. Backup/Restore (Square) -->
+        <div class="card" id="backup">
+            <div class="card-header">
+                <span class="card-title">BACKUP</span>
+            </div>
+            <div class="card-body">
+                <div class="backup-status">
+                    <span class="backup-label">Last backup</span>
+                    <span class="backup-time">2 hours ago</span>
+                </div>
+                <button class="btn-primary">Backup Now</button>
+                <div class="backup-history">
+                    <div class="backup-version">v2.1.0 • 2h ago</div>
+                    <div class="backup-version">v2.0.5 • 1d ago</div>
+                    <div class="backup-version">v2.0.4 • 3d ago</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <select class="select-field">
+                    <option>Restore from...</option>
+                    <option>v2.1.0</option>
+                    <option>v2.0.5</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 13. Settings (Square) -->
+        <div class="card" id="settings">
+            <div class="card-header">
+                <span class="card-title">SETTINGS</span>
+            </div>
+            <div class="card-body">
+                <div class="setting-item">
+                    <span class="setting-label">Theme</span>
+                    <div class="setting-toggle">
+                        <button class="btn-toggle">☀️ Light</button>
+                        <button class="btn-toggle active">🌙 Dark</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Timezone</span>
+                    <select class="select-field">
+                        <option>America/Chicago</option>
+                        <option>America/New_York</option>
+                        <option>UTC</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Personality</span>
+                    <select class="select-field">
+                        <option>Professional</option>
+                        <option selected>Casual</option>
+                        <option>Snarky</option>
+                    </select>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-label">Location</span>
+                    <input type="text" class="input-field" value="Minnetonka, MN" />
+                </div>
+            </div>
+        </div>
+
+        <!-- 14. Performance Analytics (Wide) -->
+        <div class="card card-wide" id="performance">
+            <div class="card-header">
+                <span class="card-title">ANALYTICS</span>
+            </div>
+            <div class="card-body">
+                <canvas id="performance-chart" width="400" height="150"></canvas>
+                <div class="stats-row">
+                    <div class="stat-box">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Avg tasks/day</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">Tuesday</div>
+                        <div class="stat-label">Peak day</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Total this month</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 15. Bugs/Issues (Square) -->
+        <div class="card" id="issues">
+            <div class="card-header">
+                <span class="card-title">ISSUES</span>
+                <span class="badge badge-warning">3 open</span>
+            </div>
+            <div class="card-body">
+                <div class="issue-summary">
+                    <div class="issue-count issue-high">
+                        <span class="issue-icon">🔴</span>
+                        <span class="issue-number">1</span>
+                        <span class="issue-label">High</span>
+                    </div>
+                    <div class="issue-count issue-medium">
+                        <span class="issue-icon">🟡</span>
+                        <span class="issue-number">1</span>
+                        <span class="issue-label">Medium</span>
+                    </div>
+                    <div class="issue-count issue-low">
+                        <span class="issue-icon">🔵</span>
+                        <span class="issue-number">1</span>
+                        <span class="issue-label">Low</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn-primary">Report Bug</button>
+            </div>
+        </div>
+
+        <!-- 16. Roadmap (Wide) -->
+        <div class="card card-wide" id="roadmap">
+            <div class="card-header">
+                <span class="card-title">ROADMAP</span>
+            </div>
+            <div class="card-body">
+                <div class="roadmap-item">
+                    <div class="roadmap-header">
+                        <span class="roadmap-title">Voice Integration</span>
+                        <span class="badge badge-info">PLANNED</span>
+                    </div>
+                    <div class="roadmap-votes">👍 5</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-header">
+                        <span class="roadmap-title">Mobile App</span>
+                        <span class="badge badge-warning">IN DEV</span>
+                    </div>
+                    <div class="roadmap-votes">👍 12</div>
+                </div>
+                <div class="roadmap-item">
+                    <div class="roadmap-header">
+                        <span class="roadmap-title">Team Collaboration</span>
+                        <span class="badge badge-success">TESTING</span>
+                    </div>
+                    <div class="roadmap-votes">👍 8</div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <input type="text" class="input-field" placeholder="Suggest a feature..." />
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
